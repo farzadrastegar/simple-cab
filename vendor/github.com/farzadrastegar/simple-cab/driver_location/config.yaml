@@ -1,0 +1,19 @@
+urls:
+  driverLocations:
+    method: "GET"
+    path: "/drivers/:id/locations"
+    nsq:
+      nsqLookupdAddress: "nsqlookupd:4161"
+      nsqdAddress: "nsqd:4150"
+      topic: "locations"
+      maxInFlight: 25
+      channel: "store_location"
+      handlerConcurrency: 4
+server:
+  address: ""
+  port: "8083"
+database:
+  address: "redis"
+  port: "6379"
+  passwrod: ""
+  db: 0
