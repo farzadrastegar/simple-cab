@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  redis:
+    image: redis:5.0.3-alpine
+    ports:
+      - "6379:6379"
+
+  nsqlookupd:
+    image: nsqio/nsq:v0.3.8
+    command: /nsqlookupd
+    ports:
+      - "4160:4160"
+      - "4161:4161"
+
