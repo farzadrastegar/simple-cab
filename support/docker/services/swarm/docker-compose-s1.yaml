@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  configserver:
+    image: farzadras/configserver
+    ports:
+      - "8888:8888"
+
+  rabbitmq:
+    image: farzadras/rabbitmq
+    ports:
+      - "1883:1883"
+      - "5672:5672"
+      - "15672:15672"
+
+  redis:
+    image: redis:5.0.3-alpine
+    ports:
+      - "6379:6379"
+
+  nsqlookupd:
+    image: nsqio/nsq:v0.3.8
+    command: /nsqlookupd
+    ports:
+      - "4160:4160"
+      - "4161:4161"
+

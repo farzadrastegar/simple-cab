@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  zombie_driver:
+    image: farzadras/zombie_driver
+    ports:
+      - "8082:8082"
+    depends_on:
+      - driver_location
+
