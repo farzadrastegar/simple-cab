@@ -13,4 +13,4 @@ ARG moduleName
 COPY --from=builder /go/src/github.com/farzadrastegar/simple-cab/${moduleName}/cmd/main /app/cmd/
 COPY --from=builder /go/src/github.com/farzadrastegar/simple-cab/${moduleName}/config.yaml /app/
 WORKDIR /app/cmd
-CMD ["./main"]
+ENTRYPOINT ["./main", "-configServerUrl", "http://configserver:8888", "-profile", "dev", "-configBranch", "master"]
