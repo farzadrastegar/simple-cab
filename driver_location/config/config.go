@@ -130,3 +130,9 @@ func NewConfig(logger *log.Logger) *Handlers {
 //	return nil
 //}
 
+//logger := log.New(os.Stderr, "", log.LstdFlags|log.Lshortfile)
+//configHandler := config.NewConfig(logger)
+//configHandler.ReadYaml(driver_location.GetConfigFilename())
+//addr := configHandler.GetYamlValueStr("server", "address")
+//port := configHandler.GetYamlValueStr("server", "port")
+

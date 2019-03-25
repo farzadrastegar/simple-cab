@@ -43,7 +43,6 @@ var consumedLocation string
 var busService driver_location.BusService
 
 func beforeEachTest() {
-	//driver_location.SetConfigFilename("../cmd/config.yaml")
 	driver_location.LoadConfigurationFromBranch()
 }
 

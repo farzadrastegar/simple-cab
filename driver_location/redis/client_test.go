@@ -17,8 +17,6 @@ type Client struct {
 
 // NewClient returns a new instance of Client.
 func NewClient() *Client {
-	//driver_location.SetConfigFilename("../cmd/config.yaml")
-
 	c := &Client{
 		Client: redis.NewClient(),
 	}
