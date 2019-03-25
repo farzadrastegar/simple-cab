@@ -2,7 +2,6 @@ package bus
 
 import (
 	"github.com/farzadrastegar/simple-cab/driver_location"
-	"github.com/farzadrastegar/simple-cab/driver_location/config"
 	"github.com/rafaeljesus/nsq-event-bus"
 	"github.com/spf13/viper"
 	"log"
@@ -31,62 +30,14 @@ type Bus struct {
 	//BusService *BusService
 }
 
-func (b *Bus) readParams0() error {
-	//create a config handler
-	configHandler := config.NewConfig(b.Logger)
-
-	//read yaml config
-	configHandler.ReadYaml(driver_location.GetConfigFilename())
-	yaml := configHandler.GetYamlValue("urls", "driverLocations", "nsq")
-
-	//set parameters from yaml
-	msg := "ERROR: reading NSQ parameters failed"
-	nsqdLookupAddress, err := yaml.Get("nsqLookupdAddress").String()
-	if err != nil {
-		return driver_location.Error(msg)
-	}
-	nsqdAddress, err := yaml.Get("nsqdAddress").String()
-	if err != nil {
-		return driver_location.Error(msg)
-	}
-	topic, err := yaml.Get("topic").String()
-	if err != nil {
-		return driver_location.Error(msg)
-	}
-	channel, err := yaml.Get("channel").String()
-	if err != nil {
-		return driver_location.Error(msg)
-	}
-	maxInFlight, err := yaml.Get("maxInFlight").Int()
-	if err != nil {
-		return driver_location.Error(msg)
-	}
-	handlerConcurrency, err := yaml.Get("handlerConcurrency").Int()
-	if err != nil {
-		return driver_location.Error(msg)
-	}
-
-	b.ParamsSet = true
-
-	b.Params = &Params{
-		NSQLookupdAddress:  nsqdLookupAddress,
-		NSQDAddress:        nsqdAddress,
-		Topic:              topic,
-		MaxInFlight:        maxInFlight,
-		Channel:            channel,
-		HandlerConcurrency: handlerConcurrency,
-	}
-	return nil
-}
-
 func (b *Bus) readParams() error {
 	//set parameters from yaml
-	nsqdLookupAddress = viper.GetString("urls.driverLocations.nsq.nsqLookupdAddress")
-	nsqdAddress = viper.GetString("urls.driverLocations.nsq.nsqdAddress")
-	topic = viper.GetString("urls.driverLocations.nsq.topic")
-	channel = viper.GetString("urls.driverLocations.nsq.channel")
-	maxInFlight = viper.GetInt("urls.driverLocations.nsq.maxInFlight")
-	handlerConcurrency = viper.GetInt("urls.driverLocations.nsq.handlerConcurrency")
+	nsqdLookupAddress := viper.GetString("urls.driverLocations.nsq.nsqLookupdAddress")
+	nsqdAddress := viper.GetString("urls.driverLocations.nsq.nsqdAddress")
+	topic := viper.GetString("urls.driverLocations.nsq.topic")
+	channel := viper.GetString("urls.driverLocations.nsq.channel")
+	maxInFlight := viper.GetInt("urls.driverLocations.nsq.maxInFlight")
+	handlerConcurrency := viper.GetInt("urls.driverLocations.nsq.handlerConcurrency")
 
 	b.ParamsSet = true
 

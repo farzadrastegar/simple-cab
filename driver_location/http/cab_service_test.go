@@ -15,6 +15,8 @@ import (
 )
 
 func TestCabService_StoreLocation_InvalidInput(t *testing.T) {
+	driver_location.LoadConfigurationFromBranch()
+
 	t.Run("StatusBadRequest", testCabService_StoreLocation_InvalidInputJson)
 	t.Run("MethodNotAllowed", testCabService_StoreLocation_InvalidHTTPMethod)
 }
@@ -98,6 +100,8 @@ func testCabService_StoreLocation_InvalidHTTPMethod(t *testing.T) {
 }
 
 func TestCabService_CheckValidOutput(t *testing.T) {
+	driver_location.LoadConfigurationFromBranch()
+
 	t.Run("StoreLocation", testCabService_StoreLocation_ValidOuput)
 	t.Run("GetDriverLocations", testCabService_GetDriverLocations_ValidOutput)
 }
@@ -141,6 +145,7 @@ func testCabService_GetDriverLocations_ValidOutput(t *testing.T) {
 
 	// Send a request.
 	out, err := c.Connect().GetDriverLocations("123", 5.0)
+	out.ServerIP = ""
 
 	if err != nil {
 		t.Fatal(err)

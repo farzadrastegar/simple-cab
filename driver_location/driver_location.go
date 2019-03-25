@@ -1,8 +1,5 @@
 package driver_location
 
-// AppName contains the name of this app.
-const AppName = "driver_location"
-
 // DriverID represents a driver identifier.
 type DriverID int
 
@@ -41,20 +38,3 @@ type CabService interface {
 	GetDriverLocations(id string, minutes float64) (*Locations, error)
 }
 
-// CreateCabService creates a service through input client.
-func CreateCabService(c Client) CabService {
-	return c.Connect()
-}
-
-// driverLocationConfigFilename contains configuration parameters in yaml format.
-var driverLocationConfigFilename string
-
-// SetYamlFilename sets the configurations file name.
-func SetConfigFilename(yamlFilename string) {
-	driverLocationConfigFilename = yamlFilename
-}
-
-// GetYamlFilename returns the configurations file name.
-func GetConfigFilename() string {
-	return driverLocationConfigFilename
-}

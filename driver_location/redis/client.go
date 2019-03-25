@@ -3,7 +3,6 @@ package redis
 import (
 	"fmt"
 	"github.com/farzadrastegar/simple-cab/driver_location"
-	"github.com/farzadrastegar/simple-cab/driver_location/config"
 	"github.com/go-redis/redis"
 	"github.com/spf13/viper"
 	"log"
@@ -37,37 +36,6 @@ type Client struct {
 
 func (c *Client) GetDB() *redis.Client {
 	return c.db
-}
-
-func (c *Client) readParams0() {
-	var err error
-
-	//read database config from config.yaml
-	dbConf := config.NewConfig(c.logger)
-	dbConf.ReadYaml(driver_location.GetConfigFilename())
-	serverYaml := dbConf.GetYamlValue("database")
-	//read address
-	c.params.dbAddr, err = serverYaml.Get("address").String()
-	if err != nil {
-		c.logger.Fatalf("database configurations in yaml not readable => %#v", err)
-	}
-	//read port
-	c.params.dbPort, err = serverYaml.Get("port").String()
-	if err != nil {
-		c.logger.Fatalf("database configurations in yaml not readable => %#v", err)
-	}
-	//read password
-	c.params.dbPassword, err = serverYaml.Get("password").String()
-	if err != nil {
-		c.params.dbPassword = ""
-		c.logger.Printf("using database default password")
-	}
-	//read db
-	c.params.dbDB, err = serverYaml.Get("db").Int()
-	if err != nil {
-		c.params.dbDB = 0
-		c.logger.Printf("using default redis database")
-	}
 }
 
 func (c *Client) readParams() {

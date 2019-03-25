@@ -44,6 +44,7 @@ var busService driver_location.BusService
 
 func beforeEachTest() {
 	//driver_location.SetConfigFilename("../cmd/config.yaml")
+	driver_location.LoadConfigurationFromBranch()
 }
 
 func Test_DriverLocation_StoreLocationWithBus_main(t *testing.T) {

@@ -43,7 +43,10 @@ var _ = Describe("basic functionality", func() {
 	longitude := 2.2
 
 	BeforeSuite(func() {
+		// Set random number seed.
 		rand.Seed(randSeed.Unix())
+
+		// Execute the flushdb command in Redis.
 		flushDB()
 	})
 
@@ -51,7 +54,6 @@ var _ = Describe("basic functionality", func() {
 	})
 
 	BeforeEach(func() {
-		//driver_location.SetConfigFilename("../cmd/config.yaml")
 	})
 
 	AfterEach(func() {
@@ -101,21 +103,18 @@ func TestSuite(t *testing.T) {
 	RunSpecs(t, "database")
 }
 
-func readDBPort() {
-	//driver_location.SetConfigFilename("../cmd/config.yaml")
+func readConf() {
+	// Load configurations.
+	driver_location.LoadConfigurationFromBranch()
 
-	// Read server address and port from config.yaml.
-	//logger := log.New(os.Stderr, "", log.LstdFlags|log.Lshortfile)
-	//configHandler := config.NewConfig(logger)
-	//configHandler.ReadYaml(driver_location.GetConfigFilename())
-	//port = configHandler.GetYamlValueStr("database", "port")
+	// Set port.
 	port = viper.GetString("database.port")
 }
 
 func dbPortIsListening() bool {
 	// Read port (if needed)
 	if !paramsReady {
-		readDBPort()
+		readConf()
 		paramsReady = true
 	}
 
@@ -139,7 +138,6 @@ func dbPortIsListening() bool {
 
 func flushDB() {
 	if dbPortIsListening() {
-		//driver_location.SetConfigFilename("../cmd/config.yaml")
 		client := MustOpenClient()
 		Expect(client.GetDB().FlushDB().Err()).NotTo(HaveOccurred())
 		Expect(client.Close()).NotTo(HaveOccurred())

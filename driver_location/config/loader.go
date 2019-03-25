@@ -8,8 +8,7 @@ import (
         "github.com/spf13/viper"
 )
 
-
-// Loads config from for example http://configserver:8888/accountservice/test/P8
+// LoadConfigurationFromBranch loads configurations into viper.
 func LoadConfigurationFromBranch(configServerUrl string, appName string, profile string, branch string) {
         url := fmt.Sprintf("%s/%s/%s/%s", configServerUrl, appName, profile, branch)
         fmt.Printf("Loading config from %s\n", url)
@@ -20,6 +19,7 @@ func LoadConfigurationFromBranch(configServerUrl string, appName string, profile
         parseConfiguration(body)
 }
 
+// fetchConfiguration gets config from given url.
 func fetchConfiguration(url string) ([]byte, error) {
         resp, err := http.Get(url)
         if err != nil {
@@ -29,6 +29,7 @@ func fetchConfiguration(url string) ([]byte, error) {
         return body, err
 }
 
+// parseConfiguration reads input, which is received from config server, into viper as key, value pairs.
 func parseConfiguration(body []byte) {
         var cloudConfig springCloudConfig
         err := json.Unmarshal(body, &cloudConfig)
@@ -38,14 +39,12 @@ func parseConfiguration(body []byte) {
 
         for key, value := range cloudConfig.PropertySources[0].Source {
                 viper.Set(key, value)
-                fmt.Printf("Loading config property %v => %v\n", key, value)
+                //fmt.Printf("Loading config property %v => %v\n", key, value)
         }
         if viper.IsSet("server_name") {
                 fmt.Printf("Successfully loaded configuration for service %s\n", viper.GetString("server_name"))
         }
 }
-
-
 
 type springCloudConfig struct {
         Name            string           `json:"name"`
@@ -59,4 +58,3 @@ type propertySource struct {
         Name   string                 `json:"name"`
         Source map[string]interface{} `json:"source"`
 }
-
