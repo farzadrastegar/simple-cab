@@ -3,12 +3,10 @@ package redis_test
 import (
 	"fmt"
 	"github.com/farzadrastegar/simple-cab/driver_location"
-	"github.com/farzadrastegar/simple-cab/driver_location/config"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"log"
+	"github.com/spf13/viper"
 	"math/rand"
-	"os"
 	"os/exec"
 	"strings"
 	"testing"
@@ -53,7 +51,7 @@ var _ = Describe("basic functionality", func() {
 	})
 
 	BeforeEach(func() {
-		driver_location.SetConfigFilename("../cmd/config.yaml")
+		//driver_location.SetConfigFilename("../cmd/config.yaml")
 	})
 
 	AfterEach(func() {
@@ -104,13 +102,14 @@ func TestSuite(t *testing.T) {
 }
 
 func readDBPort() {
-	driver_location.SetConfigFilename("../cmd/config.yaml")
+	//driver_location.SetConfigFilename("../cmd/config.yaml")
 
 	// Read server address and port from config.yaml.
-	logger := log.New(os.Stderr, "", log.LstdFlags|log.Lshortfile)
-	configHandler := config.NewConfig(logger)
-	configHandler.ReadYaml(driver_location.GetConfigFilename())
-	port = configHandler.GetYamlValueStr("database", "port")
+	//logger := log.New(os.Stderr, "", log.LstdFlags|log.Lshortfile)
+	//configHandler := config.NewConfig(logger)
+	//configHandler.ReadYaml(driver_location.GetConfigFilename())
+	//port = configHandler.GetYamlValueStr("database", "port")
+	port = viper.GetString("database.port")
 }
 
 func dbPortIsListening() bool {

@@ -5,6 +5,7 @@ import (
 	"github.com/farzadrastegar/simple-cab/driver_location"
 	"github.com/farzadrastegar/simple-cab/driver_location/config"
 	"github.com/go-redis/redis"
+	"github.com/spf13/viper"
 	"log"
 	"os"
 )
@@ -38,7 +39,7 @@ func (c *Client) GetDB() *redis.Client {
 	return c.db
 }
 
-func (c *Client) readParams() {
+func (c *Client) readParams0() {
 	var err error
 
 	//read database config from config.yaml
@@ -67,6 +68,20 @@ func (c *Client) readParams() {
 		c.params.dbDB = 0
 		c.logger.Printf("using default redis database")
 	}
+}
+
+func (c *Client) readParams() {
+	//read address
+	c.params.dbAddr = viper.GetString("database.address")
+
+	//read port
+	c.params.dbPort = viper.GetString("database.port")
+
+	//read password
+	c.params.dbPassword = viper.GetString("database.password")
+
+	//read db
+	c.params.dbDB = viper.GetInt("database.db")
 }
 
 func NewClient() *Client {

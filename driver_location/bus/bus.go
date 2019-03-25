@@ -4,6 +4,7 @@ import (
 	"github.com/farzadrastegar/simple-cab/driver_location"
 	"github.com/farzadrastegar/simple-cab/driver_location/config"
 	"github.com/rafaeljesus/nsq-event-bus"
+	"github.com/spf13/viper"
 	"log"
 	"os"
 )
@@ -30,7 +31,7 @@ type Bus struct {
 	//BusService *BusService
 }
 
-func (b *Bus) readParams() error {
+func (b *Bus) readParams0() error {
 	//create a config handler
 	configHandler := config.NewConfig(b.Logger)
 
@@ -64,6 +65,28 @@ func (b *Bus) readParams() error {
 	if err != nil {
 		return driver_location.Error(msg)
 	}
+
+	b.ParamsSet = true
+
+	b.Params = &Params{
+		NSQLookupdAddress:  nsqdLookupAddress,
+		NSQDAddress:        nsqdAddress,
+		Topic:              topic,
+		MaxInFlight:        maxInFlight,
+		Channel:            channel,
+		HandlerConcurrency: handlerConcurrency,
+	}
+	return nil
+}
+
+func (b *Bus) readParams() error {
+	//set parameters from yaml
+	nsqdLookupAddress = viper.GetString("urls.driverLocations.nsq.nsqLookupdAddress")
+	nsqdAddress = viper.GetString("urls.driverLocations.nsq.nsqdAddress")
+	topic = viper.GetString("urls.driverLocations.nsq.topic")
+	channel = viper.GetString("urls.driverLocations.nsq.channel")
+	maxInFlight = viper.GetInt("urls.driverLocations.nsq.maxInFlight")
+	handlerConcurrency = viper.GetInt("urls.driverLocations.nsq.handlerConcurrency")
 
 	b.ParamsSet = true
 

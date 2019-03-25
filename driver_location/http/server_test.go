@@ -20,7 +20,7 @@ type Server struct {
 
 // NewServer returns a new instance of Server.
 func NewServer() *Server {
-	driver_location.SetConfigFilename("../cmd/config.yaml")
+	//driver_location.SetConfigFilename("../cmd/config.yaml")
 
 	s := &Server{
 		Server:  http.NewServer(),

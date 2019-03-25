@@ -1,18 +1,43 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/farzadrastegar/simple-cab/driver_location"
 	"github.com/farzadrastegar/simple-cab/driver_location/bus"
 	"github.com/farzadrastegar/simple-cab/driver_location/http"
 	"github.com/farzadrastegar/simple-cab/driver_location/redis"
+	"github.com/spf13/viper"
 	"os"
 	"os/signal"
+	"simple-cab/driver_location/config"
 )
 
+// Initialize configurations.
+func init() {
+	profile := flag.String("profile", "test", "Environment profile, something similar to spring profiles")
+	configServerUrl := flag.String("configServerUrl", "http://configserver:8888", "Address to config server")
+	configBranch := flag.String("configBranch", "master", "git branch to fetch configuration from")
+
+	flag.Parse()
+
+	fmt.Println("Specified configBranch is " + *configBranch)
+
+	viper.Set("profile", *profile)
+	viper.Set("configServerUrl", *configServerUrl)
+	viper.Set("configBranch", *configBranch)
+}
+
 func main() {
-	// Set yaml filename.
-	driver_location.SetConfigFilename("../config.yaml")
+	//// Set yaml filename.
+	//driver_location.SetConfigFilename("../config.yaml")
+
+	// Load configurations.
+	config.LoadConfigurationFromBranch(
+		viper.GetString("configServerUrl"),
+		driver_location.AppName,
+		viper.GetString("profile"),
+		viper.GetString("configBranch"))
 
 	// Create a cab service through redis.
 	c := redis.NewClient()

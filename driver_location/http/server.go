@@ -3,12 +3,10 @@ package http
 import (
 	"fmt"
 	"github.com/farzadrastegar/simple-cab/driver_location"
-	"github.com/farzadrastegar/simple-cab/driver_location/config"
-	"log"
+	"github.com/spf13/viper"
 	"net"
 	"net/http"
 	"net/url"
-	"os"
 )
 
 // DefaultAddr is the default bind address.
@@ -27,13 +25,17 @@ type Server struct {
 
 // NewServer returns a new instance of Server.
 func NewServer() *Server {
-	// Read server address and port from config.yaml.
-	logger := log.New(os.Stderr, "", log.LstdFlags|log.Lshortfile)
-	configHandler := config.NewConfig(logger)
-	configHandler.ReadYaml(driver_location.GetConfigFilename())
-	addr := configHandler.GetYamlValueStr("server", "address")
-	port := configHandler.GetYamlValueStr("server", "port")
-	DefaultAddr = fmt.Sprintf("%s:%s", addr, port)
+	//// Read server address and port from config.yaml.
+	//logger := log.New(os.Stderr, "", log.LstdFlags|log.Lshortfile)
+	//configHandler := config.NewConfig(logger)
+	//configHandler.ReadYaml(driver_location.GetConfigFilename())
+	//addr := configHandler.GetYamlValueStr("server", "address")
+	//port := configHandler.GetYamlValueStr("server", "port")
+	port := viper.GetString("server.port")
+	if port != "" {
+		addr := viper.GetString("server.address")
+		DefaultAddr = fmt.Sprintf("%s:%s", addr, port)
+	}
 
 	return &Server{
 		Addr: DefaultAddr,
