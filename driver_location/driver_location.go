@@ -49,12 +49,12 @@ func CreateCabService(c Client) CabService {
 // driverLocationConfigFilename contains configuration parameters in yaml format.
 var driverLocationConfigFilename string
 
-//// SetYamlFilename sets the configurations file name.
-//func SetConfigFilename(yamlFilename string) {
-//	driverLocationConfigFilename = yamlFilename
-//}
-//
-//// GetYamlFilename returns the configurations file name.
-//func GetConfigFilename() string {
-//	return driverLocationConfigFilename
-//}
+// SetYamlFilename sets the configurations file name.
+func SetConfigFilename(yamlFilename string) {
+	driverLocationConfigFilename = yamlFilename
+}
+
+// GetYamlFilename returns the configurations file name.
+func GetConfigFilename() string {
+	return driverLocationConfigFilename
+}
