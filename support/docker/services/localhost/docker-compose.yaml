@@ -5,6 +5,8 @@ services:
     image: farzadras/configserver
     ports:
       - "8888:8888"
+    links:
+      - rabbitmq:rabbitmq
 
   rabbitmq:
     image: farzadras/rabbitmq

@@ -30,11 +30,15 @@ func LoadConfigurationFromBranch() {
 	// Initialize configurations.
 	initConfiguration()
 
+	// Load configurations into viper.
 	config.LoadConfigurationFromBranch(
 		viper.GetString("configServerUrl"),
 		appName,
 		viper.GetString("profile"),
 		viper.GetString("configBranch"))
+
+	// Make auto-update available for parameters.
+	//go config.StartListener(appName, viper.GetString("amqpServerUrl"), viper.GetString("configEventBus"))
 }
 
 // initConfiguration initializes viper with the profile, configServerUrl, and configBranch flags.
@@ -52,4 +56,9 @@ func initConfiguration() {
 	viper.Set("profile", *profile)
 	viper.Set("configServerUrl", *configServerUrl)
 	viper.Set("configBranch", *configBranch)
+}
+
+// GetAppName returns app's name.
+func GetAppName() string {
+	return appName
 }

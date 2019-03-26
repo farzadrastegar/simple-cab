@@ -136,3 +136,5 @@ func NewConfig(logger *log.Logger) *Handlers {
 //addr := configHandler.GetYamlValueStr("server", "address")
 //port := configHandler.GetYamlValueStr("server", "port")
 
+////how to make a fake github commit event using rabbitmq's /monitor
+//curl -H "X-Github-Event: push" -H "Content-Type: application/json" -X POST -d '{"commits": [{"modified": ["driver_location-test.yaml"]}],"name":"what is this?"}' -ki http://localhost:8888/monitor

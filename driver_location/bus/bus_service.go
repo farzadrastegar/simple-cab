@@ -35,9 +35,6 @@ func (s *BusService) Consume() error {
 		HandlerFunc:        s.nsqHandlerFunc,
 		HandlerConcurrency: s.nsqData.HandlerConcurrency,
 	})
-	//; err != nil {
-	//	s.logger.Fatalf("ERROR: configuring NSQ listener failed")
-	//}
 }
 
 func (s *BusService) nsqHandlerFunc(message *bus.Message) (reply interface{}, err error) {
