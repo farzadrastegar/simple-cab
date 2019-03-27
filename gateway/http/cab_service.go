@@ -3,13 +3,13 @@ package http
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/farzadrastegar/simple-cab/gateway"
-	"github.com/farzadrastegar/simple-cab/gateway/config"
 	"github.com/julienschmidt/httprouter"
+	"github.com/spf13/viper"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
+	"github.com/farzadrastegar/simple-cab/gateway"
 	"strings"
 )
 
@@ -32,32 +32,26 @@ func NewDataHandler() *DataHandler {
 		Logger: log.New(os.Stderr, "", log.LstdFlags|log.Lshortfile),
 	}
 
-	//create a config handler
-	configHandler := config.NewConfig(h.Logger)
-
-	//read yaml config
-	configHandler.ReadYaml(gateway.GetConfigFilename())
-
 	//setup routes
-	h.SetupRoutes(configHandler)
+	h.SetupRoutes()
 
 	return h
 }
 
-func (h *DataHandler) SetupRoutes(conf *config.Handlers) {
+func (h *DataHandler) SetupRoutes() {
 	//check method types in yaml
-	if !strings.EqualFold(conf.GetYamlValueStr("urls", "driverLocations", "method"), http.MethodPatch) {
+	if !strings.EqualFold(viper.GetString("urls.driverLocations.method"), http.MethodPatch) {
 		h.Logger.Fatalf("ERROR: wrong method type in yaml config file")
 	}
-	if !strings.EqualFold(conf.GetYamlValueStr("urls", "zombieDriver", "method"), http.MethodGet) {
+	if !strings.EqualFold(viper.GetString("urls.zombieDriver.method"), http.MethodGet) {
 		h.Logger.Fatalf("ERROR: wrong method type in yaml config file")
 	}
 
 	//set route of first endpoint
-	h.PATCH(conf.GetYamlValueStr("urls", "driverLocations", "path"), h.StoreLocation)
+	h.PATCH(viper.GetString("urls.driverLocations.path"), h.StoreLocation)
 
 	//set route of second endpoint
-	h.GET(conf.GetYamlValueStr("urls", "zombieDriver", "path"), h.CheckDriverStatus)
+	h.GET(viper.GetString("urls.zombieDriver.path"), h.CheckDriverStatus)
 }
 
 func (h *DataHandler) StoreLocation(writer http.ResponseWriter, request *http.Request, ps httprouter.Params) {

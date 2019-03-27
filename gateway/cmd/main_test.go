@@ -4,17 +4,15 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/farzadrastegar/simple-cab/gateway"
-	"github.com/farzadrastegar/simple-cab/gateway/client"
-	"github.com/farzadrastegar/simple-cab/gateway/config"
-	"github.com/farzadrastegar/simple-cab/gateway/http"
-	"github.com/farzadrastegar/simple-cab/gateway/mock"
-	"log"
+	"github.com/spf13/viper"
 	nethttp "net/http"
 	"net/url"
-	"os"
 	"os/exec"
 	"reflect"
+	"github.com/farzadrastegar/simple-cab/gateway"
+	"github.com/farzadrastegar/simple-cab/gateway/client"
+	"github.com/farzadrastegar/simple-cab/gateway/http"
+	"github.com/farzadrastegar/simple-cab/gateway/mock"
 	"strconv"
 	"strings"
 	"testing"
@@ -25,8 +23,8 @@ var busOut string
 const busOutFormat = "id:%d,{latitude:%f,longitude:%f}"
 
 func beforeEachTest() {
-	// Set yaml filename.
-	gateway.SetConfigFilename("../cmd/config.yaml")
+	// Load config.
+	gateway.LoadConfigurationFromBranch()
 }
 
 func Test_Gateway_StoreLocation_main(t *testing.T) {
@@ -70,11 +68,8 @@ func Test_Gateway_StoreLocation_main(t *testing.T) {
 func Test_Gateway_CheckZombieStatus_main(t *testing.T) {
 	beforeEachTest()
 
-	// Read CheckZombieStatus internal service's address and port.
-	logger := log.New(os.Stderr, "", log.LstdFlags|log.Lshortfile)
-	conf := config.NewConfig(logger)
-	conf.ReadYaml(gateway.GetConfigFilename())
-	zPort := conf.GetYamlValueStr("servers", "internal", "port")
+	// Read CheckZombieStatus internal service port.
+	zPort := viper.GetString("servers.internal.port")
 
 	// Check CheckZombieStatus port is listening
 	checkPort1 := fmt.Sprintf("lsof -i -n -P | grep %s | grep LISTEN | tail -n1", zPort)
@@ -90,9 +85,9 @@ func Test_Gateway_CheckZombieStatus_main(t *testing.T) {
 	defer s.Close()
 
 	// Create sample input/output data.
-	id := "123"
+	id := "999999999999"
 	idInt, _ := strconv.ParseInt(id, 0, 64)
-	expectedOut := gateway.Status{ID: gateway.DriverID(idInt), Zombie: false}
+	expectedOut := gateway.Status{ID: gateway.DriverID(idInt), Zombie: true}
 
 	// Create a Get request.
 	serverAddrPort := fmt.Sprintf("localhost:%d", s.Port())

@@ -2,13 +2,11 @@ package http
 
 import (
 	"fmt"
-	"github.com/farzadrastegar/simple-cab/gateway"
-	"github.com/farzadrastegar/simple-cab/gateway/config"
-	"log"
+	"github.com/spf13/viper"
 	"net"
 	"net/http"
 	"net/url"
-	"os"
+	"github.com/farzadrastegar/simple-cab/gateway"
 )
 
 // DefaultAddr is the default bind address.
@@ -27,13 +25,12 @@ type Server struct {
 
 // NewServer returns a new instance of Server.
 func NewServer() *Server {
-	// Read server address and port from config.yaml.
-	logger := log.New(os.Stderr, "", log.LstdFlags|log.Lshortfile)
-	configHandler := config.NewConfig(logger)
-	configHandler.ReadYaml(gateway.GetConfigFilename())
-	addr := configHandler.GetYamlValueStr("servers", "external", "address")
-	port := configHandler.GetYamlValueStr("servers", "external", "port")
-	DefaultAddr = fmt.Sprintf("%s:%s", addr, port)
+	// Read server address and port from yaml.
+	port := viper.GetString("servers.external.port")
+	if port != "" {
+		addr := viper.GetString("servers.external.address")
+		DefaultAddr = fmt.Sprintf("%s:%s", addr, port)
+	}
 
 	return &Server{
 		Addr: DefaultAddr,

@@ -12,8 +12,8 @@ import (
 )
 
 func main() {
-	// Set yaml filename.
-	gateway.SetConfigFilename("../config.yaml")
+	// Load configurations from input flags (i.e. -configServerUrl, -profile, -configBranch).
+	gateway.LoadConfigurationFromBranch()
 
 	// Create a bus service.
 	b := bus.NewBus()

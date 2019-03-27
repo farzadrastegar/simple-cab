@@ -11,6 +11,7 @@ test:
 	make -C ./client test
 	make -C ./http test
 	make -C ./cmd test
+	make -C ./config test
 
 build-linux:
 	export GOOS=linux

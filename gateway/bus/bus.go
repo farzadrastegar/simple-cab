@@ -1,11 +1,11 @@
 package bus
 
 import (
-	"github.com/farzadrastegar/simple-cab/gateway"
-	"github.com/farzadrastegar/simple-cab/gateway/config"
 	"github.com/rafaeljesus/nsq-event-bus"
+	"github.com/spf13/viper"
 	"log"
 	"os"
+	"github.com/farzadrastegar/simple-cab/gateway"
 )
 
 //const YamlFilename = "../config.yaml"
@@ -30,39 +30,13 @@ type Bus struct {
 }
 
 func (b *Bus) readParams() error {
-	//create a config handler
-	configHandler := config.NewConfig(b.Logger)
-
-	//read yaml config
-	configHandler.ReadYaml(gateway.GetConfigFilename())
-	yaml := configHandler.GetYamlValue("urls", "driverLocations", "nsq")
-
 	//set parameters from yaml
-	msg := "ERROR: reading NSQ parameters failed"
-	nsqdLookupAddress, err := yaml.Get("nsqLookupdAddress").String()
-	if err != nil {
-		return gateway.Error(msg)
-	}
-	nsqdAddress, err := yaml.Get("nsqdAddress").String()
-	if err != nil {
-		return gateway.Error(msg)
-	}
-	topic, err := yaml.Get("topic").String()
-	if err != nil {
-		return gateway.Error(msg)
-	}
-	channel, err := yaml.Get("channel").String()
-	if err != nil {
-		return gateway.Error(msg)
-	}
-	maxInFlight, err := yaml.Get("maxInFlight").Int()
-	if err != nil {
-		return gateway.Error(msg)
-	}
-	handlerConcurrency, err := yaml.Get("handlerConcurrency").Int()
-	if err != nil {
-		return gateway.Error(msg)
-	}
+	nsqdLookupAddress := viper.GetString("urls.driverLocations.nsq.nsqLookupdAddress")
+	nsqdAddress := viper.GetString("urls.driverLocations.nsq.nsqdAddress")
+	topic := viper.GetString("urls.driverLocations.nsq.topic")
+	channel := viper.GetString("urls.driverLocations.nsq.channel")
+	maxInFlight := viper.GetInt("urls.driverLocations.nsq.maxInFlight")
+	handlerConcurrency := viper.GetInt("urls.driverLocations.nsq.handlerConcurrency")
 
 	b.ParamsSet = true
 

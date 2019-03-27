@@ -1,11 +1,9 @@
 package client
 
 import (
-	"github.com/farzadrastegar/simple-cab/gateway"
-	"github.com/farzadrastegar/simple-cab/gateway/config"
-	"log"
+	"github.com/spf13/viper"
 	"net/http"
-	"os"
+	"github.com/farzadrastegar/simple-cab/gateway"
 )
 
 type RequestService interface {
@@ -22,11 +20,8 @@ type Client struct {
 // NewClient returns a new instance of Client.
 func NewClient() *Client {
 	// Read CheckZombieStatus service's address and port.
-	logger := log.New(os.Stderr, "", log.LstdFlags|log.Lshortfile)
-	conf := config.NewConfig(logger)
-	conf.ReadYaml(gateway.GetConfigFilename())
-	localServerAddr = conf.GetYamlValueStr("servers", "internal", "address")
-	localServerPort = conf.GetYamlValueStr("servers", "internal", "port")
+	localServerAddr = viper.GetString("servers.internal.address")
+	localServerPort = viper.GetString("servers.internal.port")
 
 	c := &Client{
 		Handler: NewHandler(),

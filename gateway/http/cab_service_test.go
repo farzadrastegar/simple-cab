@@ -15,6 +15,8 @@ import (
 )
 
 func TestCabService_StoreLocation_InvalidInput(t *testing.T) {
+	gateway.LoadConfigurationFromBranch()
+
 	t.Run("StatusBadRequest", testCabService_StoreLocation_InvalidInputJson)
 	t.Run("MethodNotAllowed", testCabService_StoreLocation_InvalidHTTPMethod)
 }
@@ -92,6 +94,8 @@ func testCabService_StoreLocation_InvalidHTTPMethod(t *testing.T) {
 }
 
 func TestCabService_CheckValidOutput(t *testing.T) {
+	gateway.LoadConfigurationFromBranch()
+
 	t.Run("StoreLocation", testCabService_StoreLocation_ValidOuput)
 	t.Run("CheckZombieStatus", testCabService_CheckZombieStatus_ValidOutput)
 }

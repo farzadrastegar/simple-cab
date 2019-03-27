@@ -15,8 +15,6 @@ type Client struct {
 
 // NewClient returns a new instance of test Client.
 func NewClient() *Client {
-	gateway.SetConfigFilename("../cmd/config.yaml")
-
 	c := &Client{
 		Client:  client.NewClient(),
 		Handler: NewHandler(),

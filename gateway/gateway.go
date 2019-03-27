@@ -35,21 +35,3 @@ type CabService interface {
 	StoreLocation(id string, data *Data) error
 	CheckZombieStatus(id string) (*Status, error)
 }
-
-// CreateCabService creates a service through input client.
-func CreateCabService(c Client) CabService {
-	return c.Connect()
-}
-
-// gatewayConfigFilename contains configuration parameters in yaml format.
-var gatewayConfigFilename string
-
-// SetYamlFilename sets the configurations file name.
-func SetConfigFilename(yamlFilename string) {
-	gatewayConfigFilename = yamlFilename
-}
-
-// SetYamlFilename sets the configurations file name.
-func GetConfigFilename() string {
-	return gatewayConfigFilename
-}
