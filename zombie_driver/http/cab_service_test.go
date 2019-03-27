@@ -14,6 +14,8 @@ import (
 )
 
 func TestCabService_CheckValidOutput(t *testing.T) {
+	zombie_driver.LoadConfigurationFromBranch()
+
 	t.Run("CheckZombieStatus", testCabService_CheckZombieStatus_ValidOutput)
 }
 

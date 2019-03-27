@@ -2,13 +2,13 @@ package http
 
 import (
 	"encoding/json"
-	"github.com/farzadrastegar/simple-cab/zombie_driver"
-	"github.com/farzadrastegar/simple-cab/zombie_driver/config"
 	"github.com/julienschmidt/httprouter"
+	"github.com/spf13/viper"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
+	"github.com/farzadrastegar/simple-cab/zombie_driver"
 	"strings"
 )
 
@@ -31,25 +31,20 @@ func NewDataHandler() *DataHandler {
 		Logger: log.New(os.Stderr, "", log.LstdFlags|log.Lshortfile),
 	}
 
-	configHandler := config.NewConfig(h.Logger)
-
-	//read yaml config
-	configHandler.ReadYaml(zombie_driver.GetConfigFilename())
-
 	//setup routes
-	h.SetupRoutes(configHandler)
+	h.SetupRoutes()
 
 	return h
 }
 
-func (h *DataHandler) SetupRoutes(conf *config.Handlers) {
+func (h *DataHandler) SetupRoutes() {
 	//check method types in yaml
-	if !strings.EqualFold(conf.GetYamlValueStr("urls", "zombieStatus", "method"), http.MethodGet) {
+	if !strings.EqualFold(viper.GetString("urls.zombieStatus.method"), http.MethodGet) {
 		h.Logger.Fatalf("ERROR: wrong method type in yaml config file")
 	}
 
 	//setup routes for its own services
-	h.GET(conf.GetYamlValueStr("urls", "zombieStatus", "path"), h.CheckZombieStatus)
+	h.GET(viper.GetString("urls.zombieStatus.path"), h.CheckZombieStatus)
 }
 
 func (h *DataHandler) CheckZombieStatus(writer http.ResponseWriter, request *http.Request, ps httprouter.Params) {

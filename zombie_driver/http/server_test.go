@@ -20,8 +20,6 @@ type Server struct {
 
 // NewServer returns a new instance of Server.
 func NewServer() *Server {
-	zombie_driver.SetConfigFilename("../cmd/config.yaml")
-
 	s := &Server{
 		Server:  http.NewServer(),
 		Handler: NewHandler(),

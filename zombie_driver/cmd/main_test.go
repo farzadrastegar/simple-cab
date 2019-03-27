@@ -17,8 +17,8 @@ var idInt = 123
 var expectedOut = zombie_driver.Status{ID: zombie_driver.DriverID(idInt), Zombie: false}
 
 func beforeEachTest() {
-	// Set yaml filename.
-	zombie_driver.SetConfigFilename("../cmd/config.yaml")
+	// Load configurations.
+	zombie_driver.LoadConfigurationFromBranch()
 }
 
 func Test_ZombieDriver_main(t *testing.T) {

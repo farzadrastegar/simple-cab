@@ -2,11 +2,9 @@ package client
 
 import (
 	"fmt"
-	"github.com/farzadrastegar/simple-cab/zombie_driver"
-	"github.com/farzadrastegar/simple-cab/zombie_driver/config"
-	"log"
+	"github.com/spf13/viper"
 	"net/http"
-	"os"
+	"github.com/farzadrastegar/simple-cab/zombie_driver"
 )
 
 type RequestService interface {
@@ -22,15 +20,12 @@ type Client struct {
 
 // NewClient returns a new instance of Client.
 func NewClient() *Client {
-	// Read CheckZombieStatus service's address and port.
-	logger := log.New(os.Stderr, "", log.LstdFlags|log.Lshortfile)
-	conf := config.NewConfig(logger)
-	conf.ReadYaml(zombie_driver.GetConfigFilename())
-	localServerAddr = conf.GetYamlValueStr("servers", "driver_location", "address")
-	localServerPort = conf.GetYamlValueStr("servers", "driver_location", "port")
-	distanceFloat, _ = conf.GetYamlValue("urls", "zombieStatus", "definition", "distance").Float()
+	// Read CheckZombieStatus service's config.
+	localServerAddr = viper.GetString("servers.driver_location.address")
+	localServerPort = viper.GetString("servers.driver_location.port")
+	distanceFloat = viper.GetFloat64("urls.zombieStatus.definition.distance")
 	distance = fmt.Sprintf("%f", distanceFloat)
-	durationFloat, _ := conf.GetYamlValue("urls", "zombieStatus", "definition", "duration").Float()
+	durationFloat := viper.GetFloat64("urls.zombieStatus.definition.duration")
 	duration = fmt.Sprintf("%f", durationFloat)
 
 	c := &Client{

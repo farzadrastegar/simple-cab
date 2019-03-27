@@ -12,7 +12,7 @@ import (
 
 // Test parameters
 const (
-        serviceName = "driver_location"
+        serviceName = "zombie_driver"
         configServerUrl = "localhost:8888"
         httpConfigServerUrl = "http://" + configServerUrl
         profile = "test"
@@ -30,7 +30,7 @@ func TestHandleRefreshEvent(t *testing.T) {
         gock.New(httpConfigServerUrl).
                 Get(fmt.Sprintf("/%s/%s/%s", serviceName, profile, configBranch)).
                 Reply(200).
-                BodyString (fmt.Sprintf(`{"name":"%s-%s","profiles":["%s"],"label":null,"version":null,"propertySources":[{"name":"file:/config-repo/%s-%s.yml","source":{"urls.driverLocations.nsq.topic":"changed_locations"}}]}`, serviceName, profile, profile, serviceName, profile))
+                BodyString (fmt.Sprintf(`{"name":"%s-%s","profiles":["%s"],"label":null,"version":null,"propertySources":[{"name":"file:/config-repo/%s-%s.yml","source":{"urls.zombieStatus.definition.distance":1000.0}}]}`, serviceName, profile, profile, serviceName, profile))
                 //BodyString(`{"name":"driver_location-test","profiles":["test"],"label":null,"version":null,"propertySources":[{"name":"file:/config-repo/driver_location-test.yml","source":{"urls.driverLocations.nsq.topic":"changed_locations"}}]}`)
 
         Convey("Given a refresh event received, targeting our application", t, func() {
@@ -41,7 +41,7 @@ func TestHandleRefreshEvent(t *testing.T) {
                         handleRefreshEvent([]byte(body), serviceName)
 
                         Convey("Then Viper should have been re-populated with values from Source", func() {
-                              So(viper.GetString("urls.driverLocations.nsq.topic"), ShouldEqual, "changed_locations")
+                                So(viper.GetFloat64("urls.zombieStatus.definition.distance"), ShouldEqual, 1000.0)
                         })
                 })
         })

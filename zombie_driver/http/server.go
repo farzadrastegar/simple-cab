@@ -2,13 +2,11 @@ package http
 
 import (
 	"fmt"
-	"github.com/farzadrastegar/simple-cab/zombie_driver"
-	"github.com/farzadrastegar/simple-cab/zombie_driver/config"
-	"log"
+	"github.com/spf13/viper"
 	"net"
 	"net/http"
 	"net/url"
-	"os"
+	"github.com/farzadrastegar/simple-cab/zombie_driver"
 )
 
 // DefaultAddr is the default bind address.
@@ -28,12 +26,11 @@ type Server struct {
 // NewServer returns a new instance of Server.
 func NewServer() *Server {
 	// Read server address and port from config.yaml.
-	logger := log.New(os.Stderr, "", log.LstdFlags|log.Lshortfile)
-	configHandler := config.NewConfig(logger)
-	configHandler.ReadYaml(zombie_driver.GetConfigFilename())
-	addr := configHandler.GetYamlValueStr("servers", "zombie_driver", "address")
-	port := configHandler.GetYamlValueStr("servers", "zombie_driver", "port")
-	DefaultAddr = fmt.Sprintf("%s:%s", addr, port)
+	port := viper.GetString("servers.zombie_driver.port")
+	if port != "" {
+		addr := viper.GetString("servers.zombie_driver.address")
+		DefaultAddr = fmt.Sprintf("%s:%s", addr, port)
+	}
 
 	return &Server{
 		Addr: DefaultAddr,

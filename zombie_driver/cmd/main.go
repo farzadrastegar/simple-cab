@@ -10,8 +10,8 @@ import (
 )
 
 func main() {
-	// Set yaml filename.
-	zombie_driver.SetConfigFilename("../config.yaml")
+	// Load configurations from input flags (i.e. -configServerUrl, -profile, -configBranch).
+	zombie_driver.LoadConfigurationFromBranch()
 
 	// Create a client for managing services.
 	c := client.NewClient()
