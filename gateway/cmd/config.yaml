@@ -3,8 +3,8 @@ urls:
     path: "/drivers/:id/locations"
     method: "PATCH"
     nsq:
-      nsqLookupdAddress: "nsqlookupd:4161"
-      nsqdAddress: "nsqd:4150"
+      nsqLookupdAddress: ":4161"
+      nsqdAddress: ":4150"
       topic: "locations"
       maxInFlight: 25
       channel: "store_location"
