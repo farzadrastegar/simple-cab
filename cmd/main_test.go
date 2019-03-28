@@ -1,10 +1,13 @@
 package main_test
 
 import (
+	"flag"
 	"fmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/spf13/viper"
 	"net/url"
+	"simple-cab/cmd/config"
 	"time"
 
 	"github.com/farzadrastegar/simple-cab/driver_location"
@@ -46,13 +49,9 @@ var _ = Describe("Store locations and report zombie status", func() {
 	var doItOnce = 0
 
 	BeforeSuite(func() {
-		// Set configurations parameters.
-		gateway.SetConfigFilename("config_gateway.yaml")
-		zombie_driver.SetConfigFilename("config_zombie_driver.yaml")
-		driver_location.SetConfigFilename("config_driver_location.yaml")
-		//})
-		//
-		//BeforeEach(func() {
+		// Set configuration parameters.
+		loadConfigurationFromBranch()
+
 		// Open servers.
 		_, gwSrv = OpenGatewayServer()
 		_, zdSrv = OpenZombieDriverServer()
@@ -64,7 +63,6 @@ var _ = Describe("Store locations and report zombie status", func() {
 		//dlHttpClient = OpenDriverLocationHttpClient()
 	})
 
-	//AfterEach(func() {
 	AfterSuite(func() {
 		// Close servers.
 		if gwSrv != nil {
@@ -394,4 +392,37 @@ func OpenZombieDriverHttpClient() *ZD_http.Client {
 // OpenDriverLocationHttpClient returns a driver_location http client.
 func OpenDriverLocationHttpClient() *DL_http.Client {
 	return DL_http.NewClient()
+}
+
+// loadConfigurationFromBranch loads config into viper.
+func loadConfigurationFromBranch() {
+	// Initialize configurations.
+	initConfiguration()
+
+	// Load configurations into viper.
+	config.LoadConfigurationFromBranch(
+		viper.GetString("configServerUrl"),
+		"driver_gateway_zombie",
+		viper.GetString("profile"),
+		viper.GetString("configBranch"))
+
+	// Make auto-update available for parameters.
+	//go config.StartListener(appName, viper.GetString("amqpServerUrl"), viper.GetString("configEventBus"))
+}
+
+// initConfiguration initializes viper with the profile, configServerUrl, and configBranch flags.
+func initConfiguration() {
+	viper.Reset()
+
+	profile := flag.String("profile", "test", "Environment profile, something similar to spring profiles")
+	configServerUrl := flag.String("configServerUrl", "http://localhost:8888", "Address to config server")
+	configBranch := flag.String("configBranch", "master", "git branch to fetch configuration from")
+
+	flag.Parse()
+
+	fmt.Println("Specified configBranch is " + *configBranch)
+
+	viper.Set("profile", *profile)
+	viper.Set("configServerUrl", *configServerUrl)
+	viper.Set("configBranch", *configBranch)
 }
