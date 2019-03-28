@@ -9,7 +9,7 @@ urls:
       maxInFlight: 25
       channel: "store_location"
       handlerConcurrency: 4
-  zombieDriver:
+  zombieStatus:
     path: "/drivers/:id"
     method: "GET"
     http:

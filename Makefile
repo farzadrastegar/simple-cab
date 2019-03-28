@@ -32,8 +32,7 @@ docker-build-configserver:
 	docker rmi $$(docker images -q -f dangling=true)
 
 deploy-local-services:
-	nohup docker-compose -f support/docker/services/localhost/docker-compose.yaml up >nohup-docker-compose-up 2>&1 &
-	#cd cmd; nohup go run main.go -configServerUrl=http://localhost:8888 -profile=dev -configBranch=master >nohup-main 2>&1 &; cd -
+	docker-compose -f support/docker/services/localhost/docker-compose.yaml up
 
 rm-local-services:
 	docker-compose -f support/docker/services/localhost/docker-compose.yaml down

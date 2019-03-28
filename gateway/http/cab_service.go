@@ -43,7 +43,7 @@ func (h *DataHandler) SetupRoutes() {
 	if !strings.EqualFold(viper.GetString("urls.driverLocations.method"), http.MethodPatch) {
 		h.Logger.Fatalf("ERROR: wrong method type in yaml config file")
 	}
-	if !strings.EqualFold(viper.GetString("urls.zombieDriver.method"), http.MethodGet) {
+	if !strings.EqualFold(viper.GetString("urls.zombieStatus.method"), http.MethodGet) {
 		h.Logger.Fatalf("ERROR: wrong method type in yaml config file")
 	}
 
@@ -51,7 +51,7 @@ func (h *DataHandler) SetupRoutes() {
 	h.PATCH(viper.GetString("urls.driverLocations.path"), h.StoreLocation)
 
 	//set route of second endpoint
-	h.GET(viper.GetString("urls.zombieDriver.path"), h.CheckDriverStatus)
+	h.GET(viper.GetString("urls.zombieStatus.path"), h.CheckDriverStatus)
 }
 
 func (h *DataHandler) StoreLocation(writer http.ResponseWriter, request *http.Request, ps httprouter.Params) {
