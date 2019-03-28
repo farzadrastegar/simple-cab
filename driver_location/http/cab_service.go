@@ -45,7 +45,7 @@ func NewDataHandler() *DataHandler {
 func (h *DataHandler) SetupRoutes() {
 	//check method types in yaml
 	methodType := viper.GetString("urls.driverLocations.method")
-	if 	!strings.EqualFold(methodType, http.MethodGet) ||
+	if 	!strings.EqualFold(methodType, http.MethodGet) &&
 		!strings.EqualFold(methodType, http.MethodPatch) {
 		h.Logger.Fatalf("ERROR: wrong method type in yaml config file")
 	}
