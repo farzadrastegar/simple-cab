@@ -69,7 +69,7 @@ func Test_Gateway_CheckZombieStatus_main(t *testing.T) {
 	beforeEachTest()
 
 	// Read CheckZombieStatus internal service port.
-	zPort := viper.GetString("servers.internal.port")
+	zPort := viper.GetString("servers.zombie_driver.port")
 
 	// Check CheckZombieStatus port is listening
 	checkPort1 := fmt.Sprintf("lsof -i -n -P | grep %s | grep LISTEN | tail -n1", zPort)
