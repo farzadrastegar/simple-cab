@@ -20,8 +20,8 @@ type Client struct {
 // NewClient returns a new instance of Client.
 func NewClient() *Client {
 	// Read CheckZombieStatus service's address and port.
-	localServerAddr = viper.GetString("servers.internal.address")
-	localServerPort = viper.GetString("servers.internal.port")
+	localServerAddr = viper.GetString("servers.zombie_driver.address")
+	localServerPort = viper.GetString("servers.zombie_driver.port")
 
 	c := &Client{
 		Handler: NewHandler(),

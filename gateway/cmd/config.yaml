@@ -15,9 +15,9 @@ urls:
     http:
       host: "zombie_driver"
 servers:
-  internal:
+  zombie_driver:
     address: "localhost"
     port: "8082"
-  external:
+  gateway:
     address: "localhost"
     port: "8081"
