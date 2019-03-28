@@ -26,9 +26,9 @@ type Server struct {
 // NewServer returns a new instance of Server.
 func NewServer() *Server {
 	// Read server address and port from config.
-	port := viper.GetString("server.port")
+	port := viper.GetString("servers.driver_location.port")
 	if port != "" {
-		addr := viper.GetString("server.address")
+		addr := viper.GetString("servers.driver_location.address")
 		DefaultAddr = fmt.Sprintf("%s:%s", addr, port)
 	}
 
