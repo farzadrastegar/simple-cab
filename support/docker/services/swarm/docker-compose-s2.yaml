@@ -25,11 +25,3 @@ services:
       - nsqlookupd
     command: /nsqadmin --lookupd-http-address=nsqlookupd:4161
 
-  driver_location:
-    image: farzadras/driver_location
-    ports:
-      - "8083:8083"
-    depends_on:
-      - nsqlookupd
-      - redis
-

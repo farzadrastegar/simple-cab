@@ -14,9 +14,10 @@ docker-build:
 
 docker-deploy-services:
 	docker stack deploy --compose-file ./support/docker/services/swarm/docker-compose-s1.yaml services
+	sleep 60
 	docker stack deploy --compose-file ./support/docker/services/swarm/docker-compose-s2.yaml services
+	sleep 60
 	docker stack deploy --compose-file ./support/docker/services/swarm/docker-compose-s3.yaml services
-	docker stack deploy --compose-file ./support/docker/services/swarm/docker-compose-s4.yaml services
 
 docker-rm-services:
 	docker stack rm services
