@@ -1,6 +1,13 @@
 version: '3'
 
 services:
+  configserver:
+    image: farzadras/configserver
+    ports:
+      - "8888:8888"
+    depends_on:
+      - rabbitmq
+
   nsqd:
     image: nsqio/nsq:v0.3.8
     command: /nsqd --lookupd-tcp-address=nsqlookupd:4160 --broadcast-address=nsqd

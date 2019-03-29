@@ -1,11 +1,6 @@
 version: '3'
 
 services:
-  configserver:
-    image: farzadras/configserver
-    ports:
-      - "8888:8888"
-
   rabbitmq:
     image: farzadras/rabbitmq
     ports:
