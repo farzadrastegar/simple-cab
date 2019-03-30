@@ -14,9 +14,13 @@ docker-build:
 
 docker-deploy-services:
 	docker stack deploy --compose-file ./support/docker/services/swarm/docker-compose-s1.yaml services
-	sleep 60
+	./support/docker/services/swarm/scripts/wait-for-rabbitmq.bash
+	./support/docker/services/swarm/scripts/wait-for-redis.bash
+	./support/docker/services/swarm/scripts/wait-for-nsqlookupd.bash
 	docker stack deploy --compose-file ./support/docker/services/swarm/docker-compose-s2.yaml services
-	sleep 60
+	./support/docker/services/swarm/scripts/wait-for-configserver.bash "gateway"
+	./support/docker/services/swarm/scripts/wait-for-configserver.bash "zombie_driver"
+	./support/docker/services/swarm/scripts/wait-for-configserver.bash "driver_location"
 	docker stack deploy --compose-file ./support/docker/services/swarm/docker-compose-s3.yaml services
 
 docker-rm-services:
