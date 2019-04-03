@@ -2,6 +2,7 @@ package redis
 
 import (
 	"fmt"
+
 	"github.com/farzadrastegar/simple-cab/driver_location"
 
 	"github.com/go-redis/redis"
