@@ -2,10 +2,9 @@ package bus
 
 import (
 	"github.com/farzadrastegar/simple-cab/driver_location"
-	"github.com/rafaeljesus/nsq-event-bus"
+
+	bus "github.com/rafaeljesus/nsq-event-bus"
 	"github.com/spf13/viper"
-	"log"
-	"os"
 )
 
 //const YamlFilename = "../config.yaml"
@@ -26,7 +25,6 @@ var _ driver_location.Bus = &Bus{}
 type Bus struct {
 	Params    *Params
 	ParamsSet bool
-	Logger    *log.Logger
 	//BusService *BusService
 }
 
@@ -73,7 +71,6 @@ func (b *Bus) Initialize(cs driver_location.CabService) (driver_location.BusServ
 
 	return &BusService{
 		emitter:    emitter,
-		logger:     b.Logger,
 		nsqData:    b.Params,
 		cabService: cs,
 	}, nil
@@ -84,7 +81,6 @@ func NewBus() *Bus {
 	// Create a bus instance.
 	b := &Bus{
 		ParamsSet: false,
-		Logger:    log.New(os.Stderr, "", log.LstdFlags|log.Lshortfile),
 	}
 
 	return b

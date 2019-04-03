@@ -1,10 +1,12 @@
 package bus
 
 import (
-	"github.com/farzadrastegar/simple-cab/driver_location"
-	"github.com/rafaeljesus/nsq-event-bus"
-	"log"
 	"time"
+
+	"github.com/farzadrastegar/simple-cab/driver_location"
+
+	bus "github.com/rafaeljesus/nsq-event-bus"
+	logger "github.com/sirupsen/logrus"
 )
 
 const NsqMaxDeliveryAttempts = 5
@@ -21,7 +23,6 @@ var _ driver_location.BusService = &BusService{}
 // BusService represents an implementation of driver_location.BusService.
 type BusService struct {
 	emitter    *bus.Emitter
-	logger     *log.Logger
 	nsqData    *Params
 	cabService driver_location.CabService
 }
@@ -39,7 +40,7 @@ func (s *BusService) Consume() error {
 
 func (s *BusService) nsqHandlerFunc(message *bus.Message) (reply interface{}, err error) {
 	startTime := time.Now()
-	defer s.logger.Printf("message consumption processed in %s\n", time.Now().Sub(startTime))
+	defer logger.Printf("message consumption processed in %s\n", time.Now().Sub(startTime))
 
 	e := Event{}
 	if err = message.DecodePayload(&e); err != nil {
@@ -47,7 +48,7 @@ func (s *BusService) nsqHandlerFunc(message *bus.Message) (reply interface{}, er
 		return
 	}
 
-	s.logger.Println("[Message to be consumed]", e)
+	logger.Println("[Message to be consumed]", e)
 
 	if message.Attempts > NsqMaxDeliveryAttempts {
 		message.Finish()
@@ -57,13 +58,13 @@ func (s *BusService) nsqHandlerFunc(message *bus.Message) (reply interface{}, er
 	err = s.cabService.StoreLocation(e.Id, &driver_location.Location{Latitude: e.Latitude, Longitude: e.Longitude})
 	//err = s.redisHandler.StorePayload(&e)
 	if err != nil {
-		s.logger.Printf("requeuing message")
+		logger.Printf("requeuing message")
 		message.Requeue(time.Millisecond)
 		//message.Finish() //todo
 		return
 	}
 
-	s.logger.Println("[Message consumed]", e)
+	logger.Println("[Message consumed]", e)
 
 	message.Finish()
 	return

@@ -4,16 +4,17 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/farzadrastegar/simple-cab/driver_location"
-	"github.com/julienschmidt/httprouter"
-	"github.com/spf13/viper"
-	"log"
 	"net"
 	"net/http"
 	"net/url"
-	"os"
 	"strconv"
 	"strings"
+
+	"github.com/farzadrastegar/simple-cab/driver_location"
+
+	"github.com/julienschmidt/httprouter"
+	logger "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
 const ErrInvalidJSON = driver_location.Error("invalid json")
@@ -24,7 +25,6 @@ const queryName = "minutes"
 // DataHandler represents an HTTP API handler for requests.
 type DataHandler struct {
 	*httprouter.Router
-	Logger *log.Logger
 
 	CabService driver_location.CabService
 }
@@ -33,7 +33,6 @@ type DataHandler struct {
 func NewDataHandler() *DataHandler {
 	h := &DataHandler{
 		Router: httprouter.New(),
-		Logger: log.New(os.Stderr, "", log.LstdFlags|log.Lshortfile),
 	}
 
 	//setup routes
@@ -45,9 +44,9 @@ func NewDataHandler() *DataHandler {
 func (h *DataHandler) SetupRoutes() {
 	//check method types in yaml
 	methodType := viper.GetString("urls.driverLocations.method")
-	if 	!strings.EqualFold(methodType, http.MethodGet) &&
+	if !strings.EqualFold(methodType, http.MethodGet) &&
 		!strings.EqualFold(methodType, http.MethodPatch) {
-		h.Logger.Fatalf("ERROR: wrong method type in yaml config file")
+		logger.Fatalf("ERROR: wrong method type in yaml config file")
 	}
 
 	//set routes of endpoints
@@ -60,7 +59,7 @@ func (h *DataHandler) StoreLocation(writer http.ResponseWriter, request *http.Re
 	// Decode request.
 	var req driver_location.Location
 	if err := json.NewDecoder(request.Body).Decode(&req); err != nil {
-		Error(writer, ErrInvalidJSON, http.StatusBadRequest, h.Logger)
+		Error(writer, ErrInvalidJSON, http.StatusBadRequest)
 		return
 	} else {
 		//get URL parameters
@@ -69,9 +68,9 @@ func (h *DataHandler) StoreLocation(writer http.ResponseWriter, request *http.Re
 		//send request body via NSQ
 		switch err := h.CabService.StoreLocation(driverId, &req); err {
 		case nil:
-			encodeJSON(writer, &patchResponse{}, h.Logger)
+			encodeJSON(writer, &patchResponse{})
 		default:
-			Error(writer, driver_location.ErrInternal, http.StatusBadRequest, h.Logger)
+			Error(writer, driver_location.ErrInternal, http.StatusBadRequest)
 		}
 	}
 }
@@ -85,18 +84,18 @@ func (h *DataHandler) GetDriverLocations(writer http.ResponseWriter, request *ht
 	id := ps.ByName("id")
 	minutes, err := strconv.ParseFloat(request.URL.Query().Get(queryName), 64)
 	if err != nil {
-		Error(writer, err, http.StatusInternalServerError, h.Logger)
+		Error(writer, err, http.StatusInternalServerError)
 		return
 	}
 
 	// Get locations and send.
 	d, err := h.CabService.GetDriverLocations(id, minutes)
 	if err != nil {
-		Error(writer, err, http.StatusInternalServerError, h.Logger)
+		Error(writer, err, http.StatusInternalServerError)
 	} else if d == nil {
 		NotFound(writer)
 	} else {
-		encodeJSON(writer, &driver_location.Locations{Locations: d.Locations, Err: d.Err, ServerIP: getIP()}, h.Logger)
+		encodeJSON(writer, &driver_location.Locations{Locations: d.Locations, Err: d.Err, ServerIP: getIP()})
 	}
 }
 

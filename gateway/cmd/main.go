@@ -1,14 +1,16 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"os"
+	"os/signal"
+
 	"github.com/farzadrastegar/simple-cab/gateway"
 	"github.com/farzadrastegar/simple-cab/gateway/bus"
 	"github.com/farzadrastegar/simple-cab/gateway/client"
 	"github.com/farzadrastegar/simple-cab/gateway/http"
-	"log"
-	"os"
-	"os/signal"
+
+	logger "github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -46,5 +48,5 @@ func main() {
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, os.Interrupt)
 	sig := <-ch
-	fmt.Println("Got signal:", sig)
+	logger.Println("Got signal:", sig)
 }

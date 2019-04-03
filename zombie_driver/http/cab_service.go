@@ -2,14 +2,15 @@ package http
 
 import (
 	"encoding/json"
-	"github.com/julienschmidt/httprouter"
-	"github.com/spf13/viper"
-	"log"
 	"net/http"
 	"net/url"
-	"os"
-	"github.com/farzadrastegar/simple-cab/zombie_driver"
 	"strings"
+
+	"github.com/farzadrastegar/simple-cab/zombie_driver"
+
+	"github.com/julienschmidt/httprouter"
+	logger "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
 const ErrInvalidJSON = zombie_driver.Error("invalid json")
@@ -19,7 +20,6 @@ const ErrInvalidJSON = zombie_driver.Error("invalid json")
 // DataHandler represents an HTTP API handler for requests.
 type DataHandler struct {
 	*httprouter.Router
-	Logger *log.Logger
 
 	CabService zombie_driver.CabService
 }
@@ -28,7 +28,6 @@ type DataHandler struct {
 func NewDataHandler() *DataHandler {
 	h := &DataHandler{
 		Router: httprouter.New(),
-		Logger: log.New(os.Stderr, "", log.LstdFlags|log.Lshortfile),
 	}
 
 	//setup routes
@@ -40,7 +39,7 @@ func NewDataHandler() *DataHandler {
 func (h *DataHandler) SetupRoutes() {
 	//check method types in yaml
 	if !strings.EqualFold(viper.GetString("urls.zombieStatus.method"), http.MethodGet) {
-		h.Logger.Fatalf("ERROR: wrong method type in yaml config file")
+		logger.Fatalf("ERROR: wrong method type in yaml config file")
 	}
 
 	//setup routes for its own services
@@ -53,11 +52,11 @@ func (h *DataHandler) CheckZombieStatus(writer http.ResponseWriter, request *htt
 	// Status by ID.
 	d, err := h.CabService.CheckZombieStatus(id)
 	if err != nil {
-		Error(writer, err, http.StatusInternalServerError, h.Logger)
+		Error(writer, err, http.StatusInternalServerError)
 	} else if d == nil {
 		NotFound(writer)
 	} else {
-		encodeJSON(writer, &zombie_driver.Status{ID: d.ID, Zombie: d.Zombie}, h.Logger)
+		encodeJSON(writer, &zombie_driver.Status{ID: d.ID, Zombie: d.Zombie})
 	}
 }
 

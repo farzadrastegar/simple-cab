@@ -3,11 +3,13 @@ package client
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/alouche/go-geolib"
-	"github.com/farzadrastegar/simple-cab/zombie_driver"
 	"net/http"
 	"net/url"
 	"strconv"
+
+	"github.com/farzadrastegar/simple-cab/zombie_driver"
+
+	"github.com/alouche/go-geolib"
 )
 
 //const clientYamlFilename = "../config.yaml"

@@ -1,15 +1,16 @@
 package main
 
 import (
-	"fmt"
+	"os"
+	"os/signal"
+
 	"github.com/farzadrastegar/simple-cab/driver_location"
 	"github.com/farzadrastegar/simple-cab/driver_location/bus"
 	"github.com/farzadrastegar/simple-cab/driver_location/http"
 	"github.com/farzadrastegar/simple-cab/driver_location/redis"
-	"os"
-	"os/signal"
-)
 
+	logger "github.com/sirupsen/logrus"
+)
 
 func main() {
 	// Load configurations from input flags (i.e. -configServerUrl, -profile, -configBranch).
@@ -49,5 +50,5 @@ func main() {
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, os.Interrupt)
 	sig := <-ch
-	fmt.Println("Got signal:", sig)
+	logger.Println("Got signal:", sig)
 }

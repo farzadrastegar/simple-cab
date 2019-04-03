@@ -2,13 +2,14 @@ package http_test
 
 import (
 	"fmt"
-	"github.com/farzadrastegar/simple-cab/driver_location"
-	"github.com/farzadrastegar/simple-cab/driver_location/http"
-	"github.com/farzadrastegar/simple-cab/driver_location/mock"
 	"io"
 	"net/url"
 	"os"
 	"testing"
+
+	"github.com/farzadrastegar/simple-cab/driver_location"
+	"github.com/farzadrastegar/simple-cab/driver_location/http"
+	"github.com/farzadrastegar/simple-cab/driver_location/mock"
 )
 
 // Server represents a test wrapper for http.Server.
@@ -57,7 +58,7 @@ func MustOpenServerClient() (*Server, *Client) {
 	// Create a client pointing to the server.
 	c := NewClient()
 	c.Client.URL = url.URL{Scheme: "http", Host: fmt.Sprintf("localhost:%d", s.Port())}
-	//fmt.Println(c.Client.URL)
+	//logger.Println(c.Client.URL)
 	return s, c
 }
 

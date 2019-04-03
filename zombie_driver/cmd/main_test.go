@@ -3,13 +3,14 @@ package main_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/farzadrastegar/simple-cab/zombie_driver"
-	"github.com/farzadrastegar/simple-cab/zombie_driver/http"
-	"github.com/farzadrastegar/simple-cab/zombie_driver/mock"
 	nethttp "net/http"
 	"net/url"
 	"reflect"
 	"testing"
+
+	"github.com/farzadrastegar/simple-cab/zombie_driver"
+	"github.com/farzadrastegar/simple-cab/zombie_driver/http"
+	"github.com/farzadrastegar/simple-cab/zombie_driver/mock"
 )
 
 // Create sample data.

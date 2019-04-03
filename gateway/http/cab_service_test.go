@@ -2,16 +2,17 @@ package http_test
 
 import (
 	"bytes"
-	"github.com/farzadrastegar/simple-cab/gateway"
-	"github.com/farzadrastegar/simple-cab/gateway/http"
-	"github.com/farzadrastegar/simple-cab/gateway/mock"
-	"github.com/julienschmidt/httprouter"
-	"log"
 	nethttp "net/http"
 	"net/http/httptest"
 	"net/url"
 	"reflect"
 	"testing"
+
+	"github.com/farzadrastegar/simple-cab/gateway"
+	"github.com/farzadrastegar/simple-cab/gateway/http"
+	"github.com/farzadrastegar/simple-cab/gateway/mock"
+
+	"github.com/julienschmidt/httprouter"
 )
 
 func TestCabService_StoreLocation_InvalidInput(t *testing.T) {
@@ -168,6 +169,5 @@ type DataHandler struct {
 func NewDataHandler() *DataHandler {
 	h := &DataHandler{DataHandler: http.NewDataHandler()}
 	h.DataHandler.CabService = &h.CabService
-	h.Logger = log.New(VerboseWriter(&h.LogOutput), "", log.LstdFlags|log.Lshortfile)
 	return h
 }

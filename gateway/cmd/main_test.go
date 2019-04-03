@@ -4,18 +4,20 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/spf13/viper"
 	nethttp "net/http"
 	"net/url"
 	"os/exec"
 	"reflect"
+	"strconv"
+	"strings"
+	"testing"
+
 	"github.com/farzadrastegar/simple-cab/gateway"
 	"github.com/farzadrastegar/simple-cab/gateway/client"
 	"github.com/farzadrastegar/simple-cab/gateway/http"
 	"github.com/farzadrastegar/simple-cab/gateway/mock"
-	"strconv"
-	"strings"
-	"testing"
+
+	"github.com/spf13/viper"
 )
 
 var busOut string

@@ -1,9 +1,11 @@
 package client
 
 import (
-	"github.com/spf13/viper"
 	"net/http"
+
 	"github.com/farzadrastegar/simple-cab/gateway"
+
+	"github.com/spf13/viper"
 )
 
 type RequestService interface {

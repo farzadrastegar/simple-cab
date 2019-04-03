@@ -3,10 +3,11 @@ package client
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/farzadrastegar/simple-cab/gateway"
 	"net/http"
 	"net/url"
 	"strconv"
+
+	"github.com/farzadrastegar/simple-cab/gateway"
 )
 
 //const clientYamlFilename = "../config.yaml"

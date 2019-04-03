@@ -2,9 +2,11 @@ package bus
 
 import (
 	"fmt"
+
 	"github.com/farzadrastegar/simple-cab/gateway"
-	"github.com/rafaeljesus/nsq-event-bus"
-	"log"
+
+	bus "github.com/rafaeljesus/nsq-event-bus"
+	logger "github.com/sirupsen/logrus"
 )
 
 type Event struct {
@@ -24,7 +26,6 @@ var _ gateway.BusService = &BusService{}
 // BusService represents an implementation of gateway.BusService.
 type BusService struct {
 	emitter *bus.Emitter
-	logger  *log.Logger
 	topic   string
 }
 
@@ -34,10 +35,10 @@ func (s *BusService) Produce(id gateway.DriverID, message *gateway.Data) error {
 
 	//send message via NSQ.
 	if err := s.emitter.EmitAsync(s.topic, &e); err != nil {
-		s.logger.Printf("ERROR: publishing NSQ message failed %#v", err)
+		logger.Printf("ERROR: publishing NSQ message failed %#v", err)
 		return err
 	} else {
-		s.logger.Printf("[Message published] %#v", e)
+		logger.Printf("[Message published] %#v", e)
 	}
 	return nil
 }

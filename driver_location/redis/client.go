@@ -3,10 +3,10 @@ package redis
 import (
 	"fmt"
 	"github.com/farzadrastegar/simple-cab/driver_location"
+
 	"github.com/go-redis/redis"
+	logger "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"log"
-	"os"
 )
 
 //const YamlFilename = "../config.yaml"
@@ -25,7 +25,6 @@ var _ driver_location.Client = &Client{}
 type Client struct {
 	db *redis.Client
 
-	logger   *log.Logger
 	params   *Params
 	Now      int64
 	Interval int64
@@ -54,11 +53,9 @@ func (c *Client) readParams() {
 
 func NewClient() *Client {
 	c := &Client{
-		logger: log.New(os.Stderr, "", log.LstdFlags|log.Lshortfile),
 		params: &Params{dbAddr: "localhost", dbPort: "6379", dbPassword: "", dbDB: 0},
 	}
 	c.cabService.db = &c.db
-	c.cabService.logger = c.logger
 	c.cabService.now = &c.Now
 	c.cabService.interval = &c.Interval
 
@@ -71,7 +68,7 @@ func (c *Client) Open() error {
 	c.readParams()
 
 	dbAddrPort := fmt.Sprintf("%s:%s", c.params.dbAddr, c.params.dbPort)
-	c.logger.Printf("database is connecting to %s", dbAddrPort)
+	logger.Printf("database is connecting to %s", dbAddrPort)
 
 	// Create connection.
 	c.db = redis.NewClient(&redis.Options{
@@ -87,7 +84,7 @@ func (c *Client) Open() error {
 		return err
 	}
 
-	c.logger.Println("redis is ready")
+	logger.Println("redis is ready")
 	return nil
 }
 

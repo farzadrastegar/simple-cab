@@ -4,14 +4,15 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/farzadrastegar/simple-cab/driver_location"
-	"github.com/farzadrastegar/simple-cab/driver_location/http"
-	"github.com/farzadrastegar/simple-cab/driver_location/mock"
 	nethttp "net/http"
 	"net/url"
 	"reflect"
 	"testing"
 	"time"
+
+	"github.com/farzadrastegar/simple-cab/driver_location"
+	"github.com/farzadrastegar/simple-cab/driver_location/http"
+	"github.com/farzadrastegar/simple-cab/driver_location/mock"
 )
 
 type patchResponse struct {

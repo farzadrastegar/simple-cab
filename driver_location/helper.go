@@ -2,9 +2,9 @@ package driver_location
 
 import (
 	"flag"
-	"fmt"
-	"github.com/farzadrastegar/simple-cab/driver_location/config"
+	logger "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"github.com/farzadrastegar/simple-cab/driver_location/config"
 )
 
 // appName contains the name of this app.
@@ -12,6 +12,11 @@ const appName = "driver_location"
 
 // viper config parameters.
 var viperAlreadyInitialized	bool
+
+// init runs before any other method.
+func init() {
+	logger.SetFormatter(&logger.JSONFormatter{})
+}
 
 // CreateCabService creates a service through input client.
 func CreateCabService(c Client) CabService {
@@ -51,7 +56,7 @@ func initConfiguration() {
 
 	flag.Parse()
 
-	fmt.Println("Specified configBranch is " + *configBranch)
+	logger.Println("Specified configBranch is " + *configBranch)
 
 	viper.Set("profile", *profile)
 	viper.Set("configServerUrl", *configServerUrl)

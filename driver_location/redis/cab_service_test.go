@@ -2,15 +2,17 @@ package redis_test
 
 import (
 	"fmt"
-	"github.com/farzadrastegar/simple-cab/driver_location"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
-	"github.com/spf13/viper"
 	"math/rand"
 	"os/exec"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/farzadrastegar/simple-cab/driver_location"
+
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+	"github.com/spf13/viper"
 )
 
 var port string

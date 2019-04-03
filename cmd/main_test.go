@@ -5,9 +5,10 @@ import (
 	"fmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	logger "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"net/url"
-	"simple-cab/cmd/config"
+	"github.com/farzadrastegar/simple-cab/cmd/config"
 	"time"
 
 	"github.com/farzadrastegar/simple-cab/driver_location"
@@ -24,6 +25,11 @@ import (
 
 	"testing"
 )
+
+// init runs before any other method.
+func init() {
+	logger.SetFormatter(&logger.JSONFormatter{})
+}
 
 // Constants for tests.
 var (
@@ -214,7 +220,7 @@ func sendDriverLocations(id string, zombie bool) (int64, error) {
 			return 0, err
 		}
 
-		fmt.Println(">>>>> taking 1-second break")
+		logger.Println(">>>>> taking 1-second break")
 		time.Sleep(1 * time.Second)
 
 		dlClient.Interval = int64(sendingLocationsIntervals)
@@ -420,7 +426,7 @@ func initConfiguration() {
 
 	flag.Parse()
 
-	fmt.Println("Specified configBranch is " + *configBranch)
+	logger.Println("Specified configBranch is " + *configBranch)
 
 	viper.Set("profile", *profile)
 	viper.Set("configServerUrl", *configServerUrl)

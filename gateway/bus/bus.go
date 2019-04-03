@@ -1,11 +1,10 @@
 package bus
 
 import (
-	"github.com/rafaeljesus/nsq-event-bus"
-	"github.com/spf13/viper"
-	"log"
-	"os"
 	"github.com/farzadrastegar/simple-cab/gateway"
+
+	bus "github.com/rafaeljesus/nsq-event-bus"
+	"github.com/spf13/viper"
 )
 
 //const YamlFilename = "../config.yaml"
@@ -26,7 +25,6 @@ var _ gateway.Bus = &Bus{}
 type Bus struct {
 	Params    *Params
 	ParamsSet bool
-	Logger    *log.Logger
 }
 
 func (b *Bus) readParams() error {
@@ -84,7 +82,6 @@ func (b *Bus) newBusService() (gateway.BusService, error) {
 
 	return &BusService{
 		emitter: emitter,
-		logger:  b.Logger,
 		topic:   b.Params.Topic,
 	}, nil
 }
@@ -93,6 +90,5 @@ func (b *Bus) newBusService() (gateway.BusService, error) {
 func NewBus() *Bus {
 	return &Bus{
 		ParamsSet: false,
-		Logger:    log.New(os.Stderr, "", log.LstdFlags|log.Lshortfile),
 	}
 }

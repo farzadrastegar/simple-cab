@@ -1,12 +1,14 @@
 package main
 
 import (
-	"fmt"
+	"os"
+	"os/signal"
+
 	"github.com/farzadrastegar/simple-cab/zombie_driver"
 	"github.com/farzadrastegar/simple-cab/zombie_driver/client"
 	"github.com/farzadrastegar/simple-cab/zombie_driver/http"
-	"os"
-	"os/signal"
+
+	logger "github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -35,5 +37,5 @@ func main() {
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, os.Interrupt)
 	sig := <-ch
-	fmt.Println("Got signal:", sig)
+	logger.Println("Got signal:", sig)
 }

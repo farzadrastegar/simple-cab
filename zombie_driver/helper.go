@@ -2,7 +2,7 @@ package zombie_driver
 
 import (
 	"flag"
-	"fmt"
+	logger "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"github.com/farzadrastegar/simple-cab/zombie_driver/config"
 )
@@ -12,6 +12,11 @@ const appName = "zombie_driver"
 
 // viper config parameters.
 var viperAlreadyInitialized	bool
+
+// init runs before any other method.
+func init() {
+	logger.SetFormatter(&logger.JSONFormatter{})
+}
 
 // CreateCabService creates a service through input client.
 func CreateCabService(c Client) CabService {
@@ -51,7 +56,7 @@ func initConfiguration() {
 
 	flag.Parse()
 
-	fmt.Println("Specified configBranch is " + *configBranch)
+	logger.Println("Specified configBranch is " + *configBranch)
 
 	viper.Set("profile", *profile)
 	viper.Set("configServerUrl", *configServerUrl)

@@ -2,10 +2,11 @@ package bus_test
 
 import (
 	"fmt"
-	"github.com/farzadrastegar/simple-cab/gateway"
 	"os/exec"
 	"strings"
 	"testing"
+
+	"github.com/farzadrastegar/simple-cab/gateway"
 )
 
 // Ensure producing a message through a real bus (if exists) does not generate any error.

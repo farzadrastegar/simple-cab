@@ -2,10 +2,12 @@ package http
 
 import (
 	"encoding/json"
-	"github.com/farzadrastegar/simple-cab/zombie_driver"
-	"log"
 	"net/http"
 	"strings"
+
+	"github.com/farzadrastegar/simple-cab/zombie_driver"
+
+	logger "github.com/sirupsen/logrus"
 )
 
 // Handler is a collection of all the service handlers.
@@ -23,7 +25,7 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 // Error writes an API error message to the response and logger.
-func Error(w http.ResponseWriter, err error, code int, logger *log.Logger) {
+func Error(w http.ResponseWriter, err error, code int) {
 	// Log error.
 	logger.Printf("http error: %s (code=%d)", err, code)
 
@@ -50,9 +52,9 @@ func NotFound(w http.ResponseWriter) {
 }
 
 // encodeJSON encodes v to w in JSON format. Error() is called if encoding fails.
-func encodeJSON(w http.ResponseWriter, v interface{}, logger *log.Logger) {
+func encodeJSON(w http.ResponseWriter, v interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(v); err != nil {
-		Error(w, err, http.StatusInternalServerError, logger)
+		Error(w, err, http.StatusInternalServerError)
 	}
 }

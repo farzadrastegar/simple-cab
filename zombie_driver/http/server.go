@@ -2,11 +2,13 @@ package http
 
 import (
 	"fmt"
-	"github.com/spf13/viper"
 	"net"
 	"net/http"
 	"net/url"
+
 	"github.com/farzadrastegar/simple-cab/zombie_driver"
+
+	"github.com/spf13/viper"
 )
 
 // DefaultAddr is the default bind address.

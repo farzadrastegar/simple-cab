@@ -3,15 +3,16 @@ package client_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/farzadrastegar/simple-cab/gateway"
-	"github.com/farzadrastegar/simple-cab/gateway/client"
-	"github.com/julienschmidt/httprouter"
-	"log"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"reflect"
 	"testing"
+
+	"github.com/farzadrastegar/simple-cab/gateway"
+	"github.com/farzadrastegar/simple-cab/gateway/client"
+
+	"github.com/julienschmidt/httprouter"
+	logger "github.com/sirupsen/logrus"
 )
 
 // Ensure service stores data into a bus.
@@ -48,8 +49,6 @@ func TestCabService_CheckZombieStatus(t *testing.T) {
 	// Create client.
 	c := NewClient()
 
-	logger := log.New(os.Stderr, "", log.LstdFlags|log.Lshortfile)
-
 	// Prepare sample data.
 	id := "123"
 	idInt := 123
@@ -59,7 +58,7 @@ func TestCabService_CheckZombieStatus(t *testing.T) {
 	c.Handler.RequestService.r = httprouter.New()
 	c.Handler.RequestService.r.GET("/drivers/:id", func(writer http.ResponseWriter, request *http.Request, ps httprouter.Params) {
 		//encodeJSON(writer, &client.GetDataResponse{Err: "", Status: &expectedStatus}, logger)
-		encodeJSON(writer, &gateway.Status{ID: expectedStatus.ID, Zombie: expectedStatus.Zombie}, logger)
+		encodeJSON(writer, &gateway.Status{ID: expectedStatus.ID, Zombie: expectedStatus.Zombie})
 	})
 
 	// Call service.
@@ -72,15 +71,15 @@ func TestCabService_CheckZombieStatus(t *testing.T) {
 	}
 }
 
-func encodeJSON(w http.ResponseWriter, v interface{}, logger *log.Logger) {
+func encodeJSON(w http.ResponseWriter, v interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(v); err != nil {
-		Error(w, err, http.StatusInternalServerError, logger)
+		Error(w, err, http.StatusInternalServerError)
 	}
 }
 
 // Error writes an API error message to the response and logger.
-func Error(w http.ResponseWriter, err error, code int, logger *log.Logger) {
+func Error(w http.ResponseWriter, err error, code int) {
 	// Log error.
 	logger.Printf("http error: %s (code=%d)", err, code)
 

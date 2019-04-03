@@ -2,11 +2,12 @@ package bus_test
 
 import (
 	"fmt"
-	"github.com/farzadrastegar/simple-cab/driver_location"
-	"github.com/farzadrastegar/simple-cab/driver_location/mock"
 	"os/exec"
 	"strings"
 	"testing"
+
+	"github.com/farzadrastegar/simple-cab/driver_location"
+	"github.com/farzadrastegar/simple-cab/driver_location/mock"
 )
 
 // Ensure producing a message through a real bus (if exists) does not generate any error.

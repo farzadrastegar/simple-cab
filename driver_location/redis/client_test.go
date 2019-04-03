@@ -2,6 +2,7 @@ package redis_test
 
 import (
 	"github.com/farzadrastegar/simple-cab/driver_location/redis"
+
 	go_redis "github.com/go-redis/redis"
 )
 
