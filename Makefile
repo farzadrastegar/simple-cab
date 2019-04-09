@@ -17,10 +17,13 @@ docker-deploy-services:
 	./support/docker/services/swarm/scripts/wait-for-rabbitmq.bash
 	./support/docker/services/swarm/scripts/wait-for-redis.bash
 	./support/docker/services/swarm/scripts/wait-for-nsqlookupd.bash
+	./support/docker/services/swarm/scripts/wait-for-elasticsearch.bash
 	docker stack deploy --compose-file ./support/docker/services/swarm/docker-compose-s2.yaml services
 	./support/docker/services/swarm/scripts/wait-for-configserver.bash "gateway"
 	./support/docker/services/swarm/scripts/wait-for-configserver.bash "zombie_driver"
 	./support/docker/services/swarm/scripts/wait-for-configserver.bash "driver_location"
+	./support/docker/services/swarm/scripts/wait-for-logstash.bash 9500
+	./support/docker/services/swarm/scripts/wait-for-kibana.bash
 	docker stack deploy --compose-file ./support/docker/services/swarm/docker-compose-s3.yaml services
 
 docker-rm-services:
