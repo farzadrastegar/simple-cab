@@ -8,6 +8,11 @@ services:
     depends_on:
       - nsqlookupd
       - redis
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "logstash:9500"
+        gelf-compression-type: "none"
 
   gateway:
     image: farzadras/gateway
@@ -15,9 +20,19 @@ services:
       - "8081:8081"
     depends_on:
       - nsqlookupd
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "logstash:9500"
+        gelf-compression-type: "none"
 
   zombie_driver:
     image: farzadras/zombie_driver
     ports:
       - "8082:8082"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "logstash:9500"
+        gelf-compression-type: "none"
 

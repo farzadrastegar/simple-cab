@@ -7,6 +7,7 @@ services:
       - "8888:8888"
     depends_on:
       - rabbitmq
+    restart: always
 
   nsqd:
     image: nsqio/nsq:v0.3.8
@@ -25,3 +26,27 @@ services:
       - nsqlookupd
     command: /nsqadmin --lookupd-http-address=nsqlookupd:4161
 
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.0.0-rc2
+    links:
+      - elasticsearch:elasticsearch
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+    restart: always
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.0.0-rc2
+    command: logstash -f /config-dir/logstash.conf
+    links:
+      - elasticsearch:elasticsearch
+    ports:
+      - 9500:9500
+    depends_on:
+      - elasticsearch
+    volumes:
+      - "/Users/farzad/go/src/simple-cab/experimental/logstash-dir:/config-dir"
+
+volumes:
+  logstash-dir:

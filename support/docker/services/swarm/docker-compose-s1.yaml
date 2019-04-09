@@ -20,3 +20,11 @@ services:
       - "4160:4160"
       - "4161:4161"
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.0.0-rc2
+    environment:
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+      - 9300:9300
+
