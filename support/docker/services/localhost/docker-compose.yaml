@@ -7,6 +7,7 @@ services:
       - "8888:8888"
     links:
       - rabbitmq:rabbitmq
+    restart: always
 
   rabbitmq:
     image: farzadras/rabbitmq
@@ -60,6 +61,7 @@ services:
       - 5601:5601
     depends_on:
       - elasticsearch
+    restart: always
 
   logstash:
     image: docker.elastic.co/logstash/logstash:7.0.0-rc2
@@ -71,7 +73,54 @@ services:
     depends_on:
       - elasticsearch
     volumes:
-      - "/Users/farzad/go/src/simple-cab/experimental/logstash-dir:/config-dir"
+      - "../../../elk:/config-dir"
+
+  driver_location:
+    image: farzadras/driver_location
+    ports:
+      - "8083:8083"
+    depends_on:
+      - nsqlookupd
+      - redis
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:9500
+        gelf-compression-type: "none"
+    links:
+      - logstash:logstash
+    depends_on:
+      - logstash
+
+  gateway:
+    image: farzadras/gateway
+    ports:
+      - "8081:8081"
+    depends_on:
+      - nsqlookupd
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:9500
+        gelf-compression-type: "none"
+    links:
+      - logstash:logstash
+    depends_on:
+      - logstash
+
+  zombie_driver:
+    image: farzadras/zombie_driver
+    ports:
+      - "8082:8082"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:9500
+        gelf-compression-type: "none"
+    links:
+      - logstash:logstash
+    depends_on:
+      - logstash
 
 volumes:
-  logstash-dir:
+  elk:
