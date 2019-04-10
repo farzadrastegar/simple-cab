@@ -95,6 +95,12 @@ services:
       - nsqlookupd
       - redis
     restart: always
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:9500
+    links:
+      - logstash:logstash
 
   gateway:
     image: farzadras/gateway
@@ -105,6 +111,8 @@ services:
       - logstash
       - nsqlookupd
     restart: always
+    links:
+      - logstash:logstash
 
   zombie_driver:
     image: farzadras/zombie_driver
@@ -114,6 +122,12 @@ services:
       - configserver
       - logstash
     restart: always
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:9500
+    links:
+      - logstash:logstash
 
 volumes:
   elk:

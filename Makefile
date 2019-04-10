@@ -41,9 +41,16 @@ docker-build-configserver:
 
 docker-deploy-services:
 	nohup docker-compose -f support/docker/services/localhost/docker-compose.yaml up >docker-deploy-services.out 2>&1 &
+	#./support/docker/services/scripts/wait-for-rabbitmq.bash
+	#./support/docker/services/scripts/wait-for-redis.bash
+	#./support/docker/services/scripts/wait-for-nsqlookupd.bash
+	#./support/docker/services/scripts/wait-for-configserver.bash "gateway"
+	#./support/docker/services/scripts/wait-for-configserver.bash "zombie_driver"
+	#./support/docker/services/scripts/wait-for-configserver.bash "driver_location"
+	#./support/docker/services/scripts/deploy-simple-cab.bash
 
 docker-rm-services:
 	docker-compose -f support/docker/services/localhost/docker-compose.yaml down -v
 	./support/docker/services/scripts/remove-containers.bash
-
+	#./support/docker/services/scripts/kill-microservices.bash
 
