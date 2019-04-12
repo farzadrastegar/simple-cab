@@ -28,3 +28,13 @@ services:
       - 9200:9200
       - 9300:9300
 
+  alpine:
+    image: alpine
+    command: ping java.com
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://logstash:9500
+    links:
+      - logstash:logstash
+    

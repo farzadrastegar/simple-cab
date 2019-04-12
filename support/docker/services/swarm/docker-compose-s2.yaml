@@ -42,11 +42,11 @@ services:
     links:
       - elasticsearch:elasticsearch
     ports:
-      - 9500:9500
+      - 9500:9500/udp
     depends_on:
       - elasticsearch
     volumes:
-      - "/Users/farzad/go/src/simple-cab/experimental/logstash-dir:/config-dir"
+      - "../../../elk:/config-dir"
 
 volumes:
-  logstash-dir:
+  elk:
