@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  ubuntu:
+    image: farzadras/ubuntu
+    stdin_open: true
+    tty: true
+    networks:
+      - elk
+
+networks:
+
+  elk:
+    driver: bridge
+

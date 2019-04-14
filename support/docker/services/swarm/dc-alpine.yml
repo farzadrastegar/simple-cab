@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  alpine:
+    image: alpine
+    command: ping java.com
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://172.17.0.1:9500
+    links:
+      - logstash:logstash    
+    networks:
+      - elk
+
+networks:
+
+  elk:
+    driver: bridge
+

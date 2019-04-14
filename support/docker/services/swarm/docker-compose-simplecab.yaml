@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+  driver_location:
+    image: farzadras/driver_location
+    ports:
+      - "8083:8083"
+    depends_on:
+      - configserver
+      - logstash
+      - nsqlookupd
+      - redis
+    logging:
+      driver: gelf
+      options:
+        gelf-address: logstash:9500
+    restart: always
+    links:
+      - logstash:logstash
+    networks:
+      - elk
+
+
+  gateway:
+    image: farzadras/gateway
+    ports:
+      - "8081:8081"
+    depends_on:
+      - configserver
+      - logstash
+      - nsqlookupd
+    logging:
+      driver: gelf
+      options:
+        gelf-address: logstash:9500
+    restart: always
+    links:
+      - logstash:logstash
+    networks:
+      - elk
+
+
+  zombie_driver:
+    image: farzadras/zombie_driver
+    ports:
+      - "8082:8082"
+    depends_on:
+      - configserver
+      - logstash
+    logging:
+      driver: gelf
+      options:
+        gelf-address: logstash:9500
+    restart: always
+    links:
+      - logstash:logstash
+    networks:
+      - elk
+
+networks:
+
+  elk:
+    driver: bridge
+
