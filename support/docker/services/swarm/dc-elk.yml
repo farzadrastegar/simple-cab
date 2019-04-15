@@ -10,6 +10,8 @@ services:
         gelf-address: udp://172.17.0.1:9500
     links:
       - logstash:logstash
+    networks:
+      - elk
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.0.0-rc2
@@ -18,6 +20,8 @@ services:
     ports:
       - 9200:9200
       - 9300:9300
+    networks:
+      - elk
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.0.0-rc2
@@ -28,14 +32,24 @@ services:
     depends_on:
       - elasticsearch
     restart: always
+    networks:
+      - elk
 
   logstash:
     image: docker.elastic.co/logstash/logstash:7.0.0-rc2
-    command: sh -c "logstash -e 'input { gelf { port => 9500 } } output { elasticsearch { hosts => [ \"elasticsearch\" ] } }'"
+    command: sh -c "logstash -e 'input { tcp { port => 9501 } gelf { port => 9500 } } output { elasticsearch { hosts => [ \"elasticsearch\" ] } }'"
     links:
       - elasticsearch:elasticsearch
     ports:
       - 9500:9500/udp
+      - 9501:9501
     depends_on:
       - elasticsearch
+    networks:
+      - elk
+
+networks:
+
+  elk:
+    driver: bridge
 
