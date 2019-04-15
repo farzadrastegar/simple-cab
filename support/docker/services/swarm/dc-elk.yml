@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  alpine:
+    image: alpine
+    command: ping java.com
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://172.17.0.1:9500
+    links:
+      - logstash:logstash
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.0.0-rc2
+    environment:
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+      - 9300:9300
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.0.0-rc2
+    links:
+      - elasticsearch:elasticsearch
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+    restart: always
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.0.0-rc2
+    command: sh -c "logstash -e 'input { gelf { port => 9500 } } output { elasticsearch { hosts => [ \"elasticsearch\" ] } }'"
+    links:
+      - elasticsearch:elasticsearch
+    ports:
+      - 9500:9500/udp
+    depends_on:
+      - elasticsearch
+
